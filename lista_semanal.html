@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Lista Semanal – Família Lobo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:#FDFAF5;font-family:'DM Sans',sans-serif;color:#2C1810}
+input,button{font-family:inherit}
+input:focus{outline:none}
+button:active{opacity:.82}
+
+#app{min-height:100vh;padding-bottom:90px}
+
+header{background:#3E2723;color:white;padding:18px 16px 14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 14px rgba(0,0,0,.28)}
+.hdr-row{display:flex;align-items:flex-start;justify-content:space-between}
+.hdr-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700}
+.hdr-sub{font-size:12px;opacity:.6;margin-top:3px;text-transform:capitalize}
+.hdr-badge{background:#FF8A65;color:white;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;white-space:nowrap;margin-top:2px;display:none}
+
+.content{padding:16px;max-width:540px;margin:0 auto}
+
+.sec-card{background:white;border-radius:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow:hidden}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:13px 16px;border-left:4px solid}
+.sec-emoji{font-size:18px;line-height:1;flex-shrink:0}
+.sec-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;flex:1;color:#2C1810}
+.sec-badge{border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;white-space:nowrap;transition:background .2s,color .2s}
+
+/* items */
+.item-wrap+.item-wrap{border-top:1px solid #F5F0E8}
+.item-row{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;user-select:none;transition:background .1s}
+.item-row:active{background:#F9F6F1}
+
+/* checkbox */
+.cb{width:24px;height:24px;border-radius:6px;flex-shrink:0;border:2px solid #D4C5B0;background:white;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cb.on{border-color:var(--ac);background:var(--ac)}
+.cb svg{display:none}
+.cb.on svg{display:block}
+.item-lbl{font-size:14.5px;line-height:1.4;color:#2C1810;flex:1;transition:all .15s}
+.item-lbl.on{color:#B0A090;text-decoration:line-through}
+
+/* stepper */
+.stepper{display:flex;align-items:center;flex-shrink:0;border:1.5px solid #E0D8D0;border-radius:8px;overflow:hidden;height:32px}
+.step-btn{width:32px;height:32px;border:none;background:transparent;font-size:19px;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ac);line-height:1;transition:background .1s;flex-shrink:0}
+.step-btn:active{background:#F5F0E8}
+.step-num{min-width:34px;text-align:center;font-size:14px;font-weight:500;color:#2C1810;border-left:1px solid #E0D8D0;border-right:1px solid #E0D8D0;padding:0 2px;line-height:30px;flex-shrink:0}
+.step-num.blank{color:#C0B0A0;font-weight:400;font-size:16px}
+
+/* observation */
+.obs-row{padding:0 16px 11px 52px;display:flex;align-items:center;gap:7px}
+.obs-icon{font-size:12px;opacity:.4;flex-shrink:0;line-height:1}
+.obs-input{flex:1;border:none;border-bottom:1px solid #E8E0D8;font-size:13px;color:#8B7355;padding:3px 0;background:transparent;font-family:'DM Sans',sans-serif;transition:border-color .15s,color .15s}
+.obs-input::placeholder{color:#C8B9A8}
+.obs-input:focus{border-bottom-color:var(--ac);color:#2C1810}
+
+/* add row */
+.add-row{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;font-size:13px;font-weight:500;color:#999;opacity:.8;transition:opacity .15s;border-top:1px solid #F5F0E8}
+.add-row:active{opacity:1}
+.add-plus{font-size:20px;font-weight:300;line-height:1}
+.add-input-row{display:flex;gap:8px;padding:10px 14px;border-top:1px solid #F5F0E8}
+.add-input{flex:1;border-radius:8px;padding:9px 12px;font-size:14px;background:white;color:#2C1810;border:1.5px solid #ccc;font-family:'DM Sans',sans-serif}
+.add-input::placeholder{color:#C8B9A8}
+.btn-ok{color:white;border:none;border-radius:8px;padding:9px 16px;font-size:15px;cursor:pointer;flex-shrink:0}
+.btn-x{background:#EEE8E0;color:#888;border:none;border-radius:8px;padding:9px 12px;font-size:13px;cursor:pointer;flex-shrink:0}
+
+/* bottom bar */
+#bbar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #EDE7DE;padding:10px 14px calc(14px + env(safe-area-inset-bottom));box-shadow:0 -4px 18px rgba(0,0,0,.09);z-index:100}
+#main-bar,#confirm-bar{display:flex;gap:10px;width:100%;align-items:center}
+#confirm-bar{display:none}
+.btn-week{background:#F5F0E8;color:#8B7355;border:none;border-radius:10px;padding:12px 14px;font-size:12.5px;cursor:pointer;font-weight:500;white-space:nowrap;flex-shrink:0}
+.btn-email{background:#1565C0;color:white;border:none;border-radius:10px;padding:12px 0;font-size:13px;cursor:pointer;font-weight:500;flex:1;transition:background .2s}
+.btn-email:disabled{background:#9BB0CC;cursor:not-allowed}
+.btn-pdf{background:#3E2723;color:white;border:none;border-radius:10px;padding:12px 0;font-size:13px;cursor:pointer;font-weight:500;flex:1}
+.conf-txt{flex:1;font-size:13px;color:#8B7355}
+.btn-no{background:#EEE;border:none;border-radius:10px;padding:10px 16px;font-size:13px;cursor:pointer;flex-shrink:0}
+.btn-yes{background:#C0392B;color:white;border:none;border-radius:10px;padding:10px 16px;font-size:13px;cursor:pointer;font-weight:500;flex-shrink:0}
+
+#toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#2C1810;color:white;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:200;white-space:nowrap}
+
+/* ── PRINT ── */
+@media print{
+  #app,#bbar,#toast{display:none!important}
+  #pview{display:block!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{margin:16mm 20mm}
+}
+#pview{display:none;font-family:Georgia,serif;color:#1a1a1a;font-size:14px;line-height:1.5}
+.p-header{text-align:center;border-bottom:2.5px solid #2C1810;padding-bottom:14px;margin-bottom:22px}
+.p-title{font-size:26px;font-weight:700}
+.p-date{font-size:13px;color:#666;margin-top:5px;text-transform:capitalize}
+.p-body{display:grid;grid-template-columns:1fr 1fr;gap:0 36px}
+.p-body.single{display:block}
+.p-sec{break-inside:avoid;margin-bottom:20px}
+.p-sec-title{font-size:15px;font-weight:700;border-bottom:1px solid #bbb;padding-bottom:5px;margin-bottom:9px}
+.p-item{display:flex;align-items:flex-start;gap:12px;padding:6px 0;border-bottom:1px dotted #ddd}
+.p-item:last-child{border-bottom:none}
+.p-box{width:18px;height:18px;border:1.5px solid #444;border-radius:3px;flex-shrink:0;margin-top:2px}
+.p-info{flex:1}
+.p-name-row{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.p-txt{font-size:13.5px}
+.p-qty{font-size:12px;font-weight:700;color:#444;background:#F0ECE6;border-radius:4px;padding:1px 6px}
+.p-obs{font-size:12px;color:#777;font-style:italic;margin-top:3px}
+.p-footer{margin-top:28px;font-size:11px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:12px}
+</style>
+</head>
+<body>
+
+<div id="pview">
+  <div class="p-header">
+    <div class="p-title">Lista Semanal — Família Lobo</div>
+    <div class="p-date" id="p-date"></div>
+  </div>
+  <div id="p-content"></div>
+  <div class="p-footer">Gerado em <span id="p-dt"></span></div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="hdr-row">
+      <div>
+        <div class="hdr-title">Lista Semanal</div>
+        <div class="hdr-sub" id="hdr-date"></div>
+      </div>
+      <div class="hdr-badge" id="hdr-badge"></div>
+    </div>
+  </header>
+  <div class="content" id="secs"></div>
+</div>
+
+<div id="bbar">
+  <div id="main-bar">
+    <button class="btn-week" onclick="askClear()">🔄 Nova semana</button>
+    <button class="btn-email" id="btn-email" onclick="doEmail()" disabled>📧 Enviar</button>
+    <button class="btn-pdf" onclick="doPDF()">🖨️ PDF</button>
+  </div>
+  <div id="confirm-bar">
+    <span class="conf-txt">Limpar seleção desta semana?</span>
+    <button class="btn-no" onclick="cancelClear()">Não</button>
+    <button class="btn-yes" onclick="doClear()">Limpar</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SKEY='lista_lobo_v3';
+
+const DEFAULTS=[
+  {id:'refeicoes',emoji:'🍽️',title:'Refeições a Preparar',ac:'#C0392B',bg:'#FFF8F6',hasQty:false,items:[
+    {name:'Arroz do Fernando'},{name:'Feijão do Fernando'},
+    {name:'Medalhão de Filé Mignon – Odin e Malu'},{name:'Posta Vermelha – Odin e Malu'},
+    {name:'Batata Doce assada'},{name:'Brócolis e Couve-flor cozida'},
+    {name:'Arroz Branco da Kati'},{name:'Picadinho de Filé Mignon da Kati – acebolado c/ shoyu'},
+    {name:'Chuchu cozido'},{name:'Mandioca cozida'},{name:'Abobrinha cozida para salada'},
+    {name:'Batatinha assada da Kati'},{name:'Torta salgada – carne moída, tomate, cebola e salsinha'},
+    {name:'Cenoura ralada'},{name:'Gelatinas'}
+  ]},
+  {id:'tarefas',emoji:'✅',title:'Tarefas a Fazer',ac:'#2E7D32',bg:'#F6FBF6',hasQty:false,items:[
+    {name:'Trocar as águas'},{name:'Deixar as luzes acesas'},
+    {name:'Aspirar o Banheiro e a Sala'},{name:'Trocar os Tapetes'},{name:'Deixar o ar no 22'}
+  ]},
+  {id:'mercado',emoji:'🛒',title:'Itens do Mercado',ac:'#1565C0',bg:'#F5F8FF',hasQty:true,items:[
+    {name:'Arroz do Fernando',qty:0},{name:'Arroz Branco',qty:0},{name:'Feijão',qty:0},
+    {name:'Cebola Branca',qty:3},{name:'Cebola Roxa',qty:2},
+    {name:'Couve-Flor',qty:3},{name:'Brócolis',qty:3},{name:'Cenoura',qty:2},
+    {name:'Chuchu',qty:4},{name:'Abobrinha para salada',qty:3},
+    {name:'Mandioca',qty:0},{name:'Batatinha',qty:0},{name:'Batata Doce',qty:1},
+    {name:'Iogurte morango Activia',qty:4},{name:'Iogurte Nestlé Integral',qty:3},
+    {name:'Danoninho',qty:1},{name:'Yakult',qty:1},{name:'Farinha de Arroz',qty:0},
+    {name:'Azeitona preta',qty:2},{name:'Azeitona verde sem caroço',qty:1},{name:'Vassoura de palha',qty:1}
+  ]},
+  {id:'sacolao',emoji:'🥬',title:'Itens do Sacolão',ac:'#558B2F',bg:'#F7FBF4',hasQty:true,items:[
+    {name:'Banana Verde',qty:4},{name:'Banana Madura',qty:3},{name:'Abacaxi',qty:1},
+    {name:'Goiaba verde',qty:5},{name:'Maçã Vermelha',qty:2},
+    {name:'Pera Portuguesa',qty:3},{name:'Manga verde',qty:1},{name:'Manga Madura',qty:1}
+  ]},
+  {id:'acougue',emoji:'🥩',title:'Itens do Açougue',ac:'#B71C1C',bg:'#FFF5F5',hasQty:true,items:[
+    {name:'Medalhão de Filé Mignon (2 dedos)',qty:10},
+    {name:'Posta Vermelha para panela',qty:0},
+    {name:'Filé Mignon para estrogonofe',qty:0}
+  ]}
+];
+
+let secs=[],ck={},adding=null;
+
+function load(){
+  try{
+    const r=localStorage.getItem(SKEY);
+    if(r){const d=JSON.parse(r);secs=d.secs||clone(DEFAULTS);ck=d.ck||{};}
+    else{secs=clone(DEFAULTS);ck={};}
+  }catch{secs=clone(DEFAULTS);ck={};}
+}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify({secs,ck}));}catch{}}
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function K(sid,i){return sid+'_'+i}
+function getSt(key,dq){return ck[key]||{on:false,qty:dq||0,obs:''}}
+function totalOn(){return Object.values(ck).filter(s=>s&&s.on).length}
+function ckSecs(){
+  return secs.map(sec=>({
+    ...sec,
+    items:sec.items.map((item,i)=>({item,st:ck[K(sec.id,i)]}))
+      .filter(({st})=>st&&st.on)
+      .map(({item,st})=>({...item,qty:st.qty,obs:st.obs}))
+  })).filter(s=>s.items.length>0);
+}
+
+function mkSVG(){
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('width','13');svg.setAttribute('height','10');
+  svg.setAttribute('viewBox','0 0 13 10');svg.setAttribute('fill','none');
+  const p=document.createElementNS(ns,'path');
+  p.setAttribute('d','M1 5L5 9L12 1');p.setAttribute('stroke','white');
+  p.setAttribute('stroke-width','2.2');p.setAttribute('stroke-linecap','round');p.setAttribute('stroke-linejoin','round');
+  svg.appendChild(p);return svg;
+}
+function mk(tag,cls,txt){
+  const e=document.createElement(tag);
+  if(cls)e.className=cls;
+  if(txt!==undefined)e.textContent=txt;
+  return e;
+}
+
+function render(){renderHdr();renderSecs();}
+
+function renderHdr(){
+  document.getElementById('hdr-date').textContent=
+    new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+  const n=totalOn();
+  const b=document.getElementById('hdr-badge');
+  b.style.display=n>0?'block':'none';
+  b.textContent=n+' item'+(n!==1?'ns':'');
+  document.getElementById('btn-email').disabled=n===0;
+}
+
+function renderSecs(){
+  const container=document.getElementById('secs');
+  container.innerHTML='';
+  secs.forEach(sec=>{
+    const nOn=sec.items.filter((_,i)=>{const s=ck[K(sec.id,i)];return s&&s.on;}).length;
+    const card=mk('div','sec-card');
+
+    // header
+    const hdr=mk('div','sec-hdr');
+    hdr.style.cssText='background:'+sec.bg+';border-left-color:'+sec.ac;
+    hdr.appendChild(mk('span','sec-emoji',sec.emoji));
+    hdr.appendChild(mk('span','sec-title',sec.title));
+    const badge=mk('span','sec-badge',nOn+'/'+sec.items.length);
+    badge.style.background=nOn>0?sec.ac:'#E8E0D8';
+    badge.style.color=nOn>0?'white':'#999';
+    hdr.appendChild(badge);
+    card.appendChild(hdr);
+
+    // items
+    sec.items.forEach((item,i)=>{
+      const key=K(sec.id,i);
+      const st=getSt(key,item.qty||0);
+      const isOn=st.on;
+      const wrap=mk('div','item-wrap');
+
+      // clickable row
+      const row=mk('div','item-row');
+      row.onclick=()=>toggle(sec.id,i);
+
+      const cb=mk('div','cb'+(isOn?' on':''));
+      cb.style.setProperty('--ac',sec.ac);
+      if(isOn)cb.appendChild(mkSVG());
+      row.appendChild(cb);
+      row.appendChild(mk('span','item-lbl'+(isOn?' on':''),item.name));
+
+      // stepper
+      if(sec.hasQty&&isOn){
+        const stp=mk('div','stepper');
+        stp.style.setProperty('--ac',sec.ac);
+        stp.onclick=e=>e.stopPropagation();
+
+        const minus=mk('button','step-btn','−');
+        minus.style.setProperty('--ac',sec.ac);
+        minus.onclick=e=>{e.stopPropagation();decQty(sec.id,i);};
+
+        const blank=st.qty===0;
+        const numEl=mk('span','step-num'+(blank?' blank':''),blank?'—':String(st.qty));
+
+        const plus=mk('button','step-btn','+');
+        plus.style.setProperty('--ac',sec.ac);
+        plus.onclick=e=>{e.stopPropagation();incQty(sec.id,i);};
+
+        stp.appendChild(minus);stp.appendChild(numEl);stp.appendChild(plus);
+        row.appendChild(stp);
+      }
+
+      wrap.appendChild(row);
+
+      // observation (only when on)
+      if(isOn){
+        const obsRow=mk('div','obs-row');
+        obsRow.onclick=e=>e.stopPropagation();
+        const inp=mk('input','obs-input');
+        inp.type='text';
+        inp.placeholder='Observação opcional...';
+        inp.value=st.obs||'';
+        inp.style.setProperty('--ac',sec.ac);
+        inp.oninput=function(){
+          const cur=ck[key]||{on:true,qty:0,obs:''};
+          ck[key]={...cur,obs:this.value};
+          save();
+        };
+        obsRow.appendChild(mk('span','obs-icon','📝'));
+        obsRow.appendChild(inp);
+        wrap.appendChild(obsRow);
+      }
+
+      card.appendChild(wrap);
+    });
+
+    // add item
+    if(adding===sec.id){
+      const ir=mk('div','add-input-row');
+      const inp=mk('input','add-input');
+      inp.type='text';inp.placeholder='Nome do item...';inp.style.borderColor=sec.ac;
+      const ok=mk('button','btn-ok','✓');
+      ok.style.background=sec.ac;
+      const x=mk('button','btn-x','✕');
+      const doAdd=()=>{
+        const v=inp.value.trim();
+        if(v){sec.items.push({name:v,qty:sec.hasQty?0:undefined});save();}
+        adding=null;render();
+      };
+      ok.onclick=doAdd;
+      x.onclick=()=>{adding=null;renderSecs();};
+      inp.onkeydown=e=>{if(e.key==='Enter')doAdd();if(e.key==='Escape')x.onclick();};
+      ir.appendChild(inp);ir.appendChild(ok);ir.appendChild(x);
+      card.appendChild(ir);
+      setTimeout(()=>inp.focus(),30);
+    } else {
+      const ar=mk('div','add-row');
+      ar.style.color=sec.ac;
+      ar.appendChild(mk('span','add-plus','+'));
+      ar.appendChild(mk('span','','Adicionar item'));
+      ar.onclick=()=>{adding=sec.id;renderSecs();};
+      card.appendChild(ar);
+    }
+
+    container.appendChild(card);
+  });
+}
+
+function toggle(sid,i){
+  const key=K(sid,i);
+  const sec=secs.find(s=>s.id===sid);
+  const item=sec.items[i];
+  const cur=ck[key]||{on:false,qty:item.qty||0,obs:''};
+  if(!cur.on){
+    const sq=cur.qty>0?cur.qty:(item.qty||0);
+    ck[key]={on:true,qty:sq,obs:cur.obs||''};
+  } else {
+    ck[key]={...cur,on:false};
+  }
+  save();render();
+}
+
+function incQty(sid,i){
+  const key=K(sid,i);
+  const cur=ck[key]||{on:true,qty:0,obs:''};
+  ck[key]={...cur,qty:cur.qty+1};
+  save();renderSecs();renderHdr();
+}
+
+function decQty(sid,i){
+  const key=K(sid,i);
+  const cur=ck[key];if(!cur)return;
+  ck[key]={...cur,qty:Math.max(0,cur.qty-1)};
+  save();renderSecs();renderHdr();
+}
+
+function askClear(){
+  document.getElementById('main-bar').style.display='none';
+  document.getElementById('confirm-bar').style.display='flex';
+}
+function cancelClear(){
+  document.getElementById('main-bar').style.display='flex';
+  document.getElementById('confirm-bar').style.display='none';
+}
+function doClear(){ck={};save();cancelClear();render();toast('Seleção limpa ✓');}
+
+function toast(msg,ms=2200){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.style.opacity='0',ms);
+}
+
+function doEmail(){
+  const cs=ckSecs();if(!cs.length)return;
+  const dt=new Date().toLocaleDateString('pt-BR');
+  let body='Lista Semanal – '+dt+'\n\n';
+  cs.forEach(s=>{
+    body+=s.emoji+' '+s.title+'\n';
+    s.items.forEach(it=>{
+      let line='  • '+it.name;
+      if(it.qty>0)line+='  (× '+it.qty+')';
+      body+=line+'\n';
+      if(it.obs)body+='    Obs: '+it.obs+'\n';
+    });
+    body+='\n';
+  });
+  const subj=encodeURIComponent('Lista Semanal – '+dt);
+  window.location.href='mailto:fc.lobo@gmail.com,kzg.lobo@gmail.com?subject='+subj+'&body='+encodeURIComponent(body);
+}
+
+function doPDF(){
+  const cs=ckSecs();
+  const dt=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const dtS=new Date().toLocaleDateString('pt-BR');
+  document.getElementById('p-date').textContent=dt;
+  document.getElementById('p-dt').textContent=dtS;
+  const content=document.getElementById('p-content');
+  content.innerHTML='';
+
+  if(!cs.length){
+    const msg=mk('p');
+    msg.textContent='Nenhum item selecionado.';
+    msg.style.cssText='color:#999;text-align:center;font-style:italic;margin:40px 0';
+    content.appendChild(msg);
+  } else {
+    const total=cs.reduce((s,c)=>s+c.items.length,0);
+    const body=mk('div',total>12?'p-body':'p-body single');
+    cs.forEach(sec=>{
+      const sd=mk('div','p-sec');
+      sd.appendChild(mk('div','p-sec-title',sec.emoji+' '+sec.title));
+      sec.items.forEach(item=>{
+        const row=mk('div','p-item');
+        row.appendChild(mk('div','p-box'));
+        const info=mk('div','p-info');
+        const nr=mk('div','p-name-row');
+        nr.appendChild(mk('span','p-txt',item.name));
+        if(item.qty>0)nr.appendChild(mk('span','p-qty','× '+item.qty));
+        info.appendChild(nr);
+        if(item.obs)info.appendChild(mk('div','p-obs',item.obs));
+        row.appendChild(info);
+        sd.appendChild(row);
+      });
+      body.appendChild(sd);
+    });
+    content.appendChild(body);
+  }
+  window.print();
+}
+
+load();render();
+</script>
+</body>
+</html>
