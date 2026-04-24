@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0053)file:///D:/Users/fclob/Downloads/lista_semanal_7.html -->
+<!-- saved from url=(0053)file:///D:/Users/fclob/Downloads/lista_semanal_8.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Lista Semanal</title>
-<link href="./Lista Semanal2_files/css2" rel="stylesheet">
-<script src="./Lista Semanal2_files/email.min.js.download"></script>
+<link href="./Lista Semanal3_files/css2" rel="stylesheet">
+<script src="./Lista Semanal3_files/email.min.js.download"></script>
 <script>emailjs.init('UyCblsC5-ctggBwAR');</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -420,24 +420,34 @@ function doEmail(){
     body+=s.emoji+' '+s.title+'\n';
     s.items.forEach(it=>{
       let line='  • '+it.name;
-      if(it.qty>0)line+='  (× '+it.qty+')';
+      if(it.qty&&(typeof it.qty==='string'?it.qty.trim():it.qty>0))
+        line=' '+it.qty+' '+it.name;
       body+=line+'\n';
       if(it.obs)body+='    Obs: '+it.obs+'\n';
     });
     body+='\n';
   });
+
+  const timeout=setTimeout(()=>{
+    toast('Tempo esgotado – verifique o template do EmailJS');
+    btn.textContent='📧 Enviar';btn.disabled=false;
+  },10000);
+
   emailjs.send('service_d3x9a68','3kami5j',{
     subject:'Lista Semanal – '+dt,
-    body:body
+    body:body,
+    name:'Lista Semanal',
+    message:body,
+    title:'Lista Semanal – '+dt
   }).then(()=>{
+    clearTimeout(timeout);
     toast('E-mail enviado! ✓');
-    btn.textContent='📧 Enviar';
-    btn.disabled=false;
+    btn.textContent='📧 Enviar';btn.disabled=false;
   }).catch(err=>{
+    clearTimeout(timeout);
     console.error(err);
-    toast('Erro ao enviar – tente novamente');
-    btn.textContent='📧 Enviar';
-    btn.disabled=false;
+    toast('Erro: '+JSON.stringify(err));
+    btn.textContent='📧 Enviar';btn.disabled=false;
   });
 }
 
