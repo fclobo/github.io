@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0054)file:///D:/Users/fclob/Downloads/lista_semanal_14.html -->
+<!-- saved from url=(0054)file:///D:/Users/fclob/Downloads/lista_semanal_15.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Lista Semanal</title>
-<link href="./Lista Semanal5_files/css2" rel="stylesheet">
+<link href="./Lista Semanal6_files/css2" rel="stylesheet">
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -470,46 +470,139 @@ function doEmail(){
 
 function doPDF(){
   const cs=ckSecs();
-  const dt=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const dtS=new Date().toLocaleDateString('pt-BR');
-  document.getElementById('p-date').textContent=dt;
-  document.getElementById('p-dt').textContent=dtS;
-  const content=document.getElementById('p-content');
-  content.innerHTML='';
+  if(!cs.length){toast('Selecione itens primeiro');return;}
 
-  if(!cs.length){
-    const msg=mk('p');
-    msg.textContent='Nenhum item selecionado.';
-    msg.style.cssText='color:#999;text-align:center;font-style:italic;margin:40px 0';
-    content.appendChild(msg);
+  const btn=document.getElementById('btn-pdf');
+  btn.disabled=true;btn.textContent='⏳ Gerando...';
+
+  if(!window.jspdf){
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=()=>gerarPDF(cs,btn);
+    s.onerror=()=>{toast('Erro ao carregar jsPDF');btn.disabled=false;btn.textContent='🖨️ PDF';};
+    document.head.appendChild(s);
   } else {
-    const total=cs.reduce((s,c)=>s+c.items.length,0);
-    const body=mk('div','p-body');
-    cs.forEach(sec=>{
-      const sd=mk('div','p-sec');
-      sd.appendChild(mk('div','p-sec-title',sec.emoji+' '+sec.title));
-      const grid=mk('div','p-items-grid');
-      sec.items.forEach(item=>{
-        const row=mk('div','p-item');
-        const info=mk('div','p-info');
-        const nr=mk('div','p-name-row');
-        const hasQty = item.qty && (typeof item.qty==='string' ? item.qty.trim() : item.qty>0);
-        if(hasQty){
-          const qEl=mk('span','p-qty-prefix', typeof item.qty==='string' ? item.qty : item.qty);
-          nr.appendChild(qEl);
-        }
-        nr.appendChild(mk('span','p-txt',item.name));
-        info.appendChild(nr);
-        if(item.obs)info.appendChild(mk('div','p-obs',item.obs));
-        row.appendChild(info);
-        grid.appendChild(row);
-      });
-      sd.appendChild(grid);
-      body.appendChild(sd);
-    });
-    content.appendChild(body);
+    gerarPDF(cs,btn);
   }
-  window.print();
+}
+
+function gerarPDF(cs,btn){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,ML=20,MR=20,MT=20;
+  const col=W-ML-MR;
+  const col2=(col-10)/2;
+  let y=MT;
+
+  doc.setFont('times','bold');
+  doc.setFontSize(22);
+  doc.text('Lista Semanal',W/2,y,{align:'center'});
+  y+=8;
+
+  const dtObj=new Date();
+  const dt=dtObj.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const dtFile=dtObj.toLocaleDateString('pt-BR').replace(/\//g,'-');
+  const dtSubj=dtObj.toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'});
+
+  doc.setFont('times','normal');
+  doc.setFontSize(11);
+  doc.setTextColor(120);
+  doc.text(dt.charAt(0).toUpperCase()+dt.slice(1),W/2,y,{align:'center'});
+  y+=6;
+
+  doc.setDrawColor(60,30,20);
+  doc.setLineWidth(0.6);
+  doc.line(ML,y,W-MR,y);
+  y+=10;
+  doc.setTextColor(30);
+
+  cs.forEach(sec=>{
+    if(y>270){doc.addPage();y=MT;}
+    doc.setFont('times','bold');
+    doc.setFontSize(13);
+    doc.text(sec.title,ML,y);
+    y+=2;
+    doc.setDrawColor(180);
+    doc.setLineWidth(0.3);
+    doc.line(ML,y,W-MR,y);
+    y+=7;
+
+    doc.setFont('times','normal');
+    doc.setFontSize(13);
+    const items=sec.items;
+    const rows=Math.ceil(items.length/2);
+
+    for(let r=0;r<rows;r++){
+      if(y>275){doc.addPage();y=MT;}
+      [0,1].forEach(c=>{
+        const idx=r+c*rows;
+        if(idx>=items.length)return;
+        const item=items[idx];
+        const x=ML+c*(col2+10);
+        let label=item.name;
+        const hasQty=item.qty&&(typeof item.qty==='string'?item.qty.trim():item.qty>0);
+        if(hasQty)label=(typeof item.qty==='string'?item.qty:item.qty)+' '+item.name;
+        const lines=doc.splitTextToSize(label,col2);
+        doc.setTextColor(30);
+        doc.text(lines,x,y);
+        if(item.obs){
+          doc.setFontSize(10);doc.setTextColor(120);
+          doc.text(item.obs,x,y+lines.length*5);
+          doc.setFontSize(13);
+        }
+      });
+      const lh=7;
+      y+=lh;
+      doc.setDrawColor(210);doc.setLineWidth(0.2);
+      doc.setLineDashPattern([0.5,1.5],0);
+      doc.line(ML,y-1,W-MR,y-1);
+      doc.setLineDashPattern([],0);
+    }
+    y+=10;
+  });
+
+  doc.setFontSize(9);doc.setTextColor(170);
+  doc.text('Gerado em '+dtObj.toLocaleDateString('pt-BR'),W/2,290,{align:'center'});
+
+  // Build email body text
+  let emailBody='Lista Semanal – '+dtObj.toLocaleDateString('pt-BR')+'\n\n';
+  cs.forEach(s=>{
+    emailBody+=s.emoji+' '+s.title+'\n';
+    s.items.forEach(it=>{
+      const hasQty=it.qty&&(typeof it.qty==='string'?it.qty.trim():it.qty>0);
+      let line=hasQty?(typeof it.qty==='string'?it.qty:it.qty)+' '+it.name:'• '+it.name;
+      emailBody+=line+'\n';
+      if(it.obs)emailBody+='  Obs: '+it.obs+'\n';
+    });
+    emailBody+='\n';
+  });
+
+  // Convert to base64 and send to Apps Script
+  const pdfBase64=doc.output('datauristring').split(',')[1];
+
+  btn.textContent='📤 Enviando...';
+
+  const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxf_cVmY7pplk5jlle-3bjnF7mR2iM4YsJE7jmurwawB28ByK4x4rqQZxfkxh_9lL6O/exec';
+
+  fetch(SCRIPT_URL,{
+    method:'POST',
+    body:JSON.stringify({
+      pdf:pdfBase64,
+      date:dtFile,
+      subject:'Lista Semanal – '+dtSubj,
+      body:emailBody
+    })
+  }).then(r=>r.json()).then(data=>{
+    if(data.ok){
+      toast('PDF salvo e e-mail enviado! ✓',3500);
+    } else {
+      toast('Erro: '+data.error);
+    }
+    btn.disabled=false;btn.textContent='🖨️ PDF';
+  }).catch(err=>{
+    toast('Erro de rede: '+err.message);
+    btn.disabled=false;btn.textContent='🖨️ PDF';
+  });
 }
 
 load();render();
