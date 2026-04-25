@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0054)file:///D:/Users/fclob/Downloads/lista_semanal_16.html -->
+<!-- saved from url=(0054)file:///D:/Users/fclob/Downloads/lista_semanal_17.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Lista Semanal</title>
-<link href="./Lista Semanal7_files/css2" rel="stylesheet">
+<link href="./Lista Semanal8_files/css2" rel="stylesheet">
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -488,6 +488,16 @@ function doPDF(){
 
 function gerarPDF(cs,btn){
   const {jsPDF}=window.jspdf;
+  const doc=buildDoc(cs);
+  const blob=doc.output('blob');
+  const url=URL.createObjectURL(blob);
+  window.open(url,'_blank');
+  btn.disabled=false;btn.textContent='🖨️ PDF';
+  toast('PDF gerado! ✓');
+}
+
+function buildDoc(cs){
+  const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
   const W=210,ML=20,MR=20,MT=20;
   const col=W-ML-MR;
@@ -501,8 +511,6 @@ function gerarPDF(cs,btn){
 
   const dtObj=new Date();
   const dt=dtObj.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const dtFile=dtObj.toLocaleDateString('pt-BR').replace(/\//g,'-');
-  const dtSubj=dtObj.toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'});
 
   doc.setFont('times','normal');
   doc.setFontSize(11);
@@ -510,49 +518,39 @@ function gerarPDF(cs,btn){
   doc.text(dt.charAt(0).toUpperCase()+dt.slice(1),W/2,y,{align:'center'});
   y+=6;
 
-  doc.setDrawColor(60,30,20);
-  doc.setLineWidth(0.6);
+  doc.setDrawColor(60,30,20);doc.setLineWidth(0.6);
   doc.line(ML,y,W-MR,y);
-  y+=10;
-  doc.setTextColor(30);
+  y+=10;doc.setTextColor(30);
 
   cs.forEach(sec=>{
     if(y>270){doc.addPage();y=MT;}
-    doc.setFont('times','bold');
-    doc.setFontSize(13);
-    doc.text(sec.title,ML,y);
-    y+=2;
-    doc.setDrawColor(180);
-    doc.setLineWidth(0.3);
-    doc.line(ML,y,W-MR,y);
-    y+=7;
+    doc.setFont('times','bold');doc.setFontSize(13);
+    doc.text(sec.title,ML,y);y+=2;
+    doc.setDrawColor(180);doc.setLineWidth(0.3);
+    doc.line(ML,y,W-MR,y);y+=7;
 
-    doc.setFont('times','normal');
-    doc.setFontSize(13);
+    doc.setFont('times','normal');doc.setFontSize(13);
     const items=sec.items;
     const rows=Math.ceil(items.length/2);
 
     for(let r=0;r<rows;r++){
       if(y>275){doc.addPage();y=MT;}
       [0,1].forEach(c=>{
-        const idx=r+c*rows;
-        if(idx>=items.length)return;
+        const idx=r+c*rows;if(idx>=items.length)return;
         const item=items[idx];
         const x=ML+c*(col2+10);
         let label=item.name;
         const hasQty=item.qty&&(typeof item.qty==='string'?item.qty.trim():item.qty>0);
         if(hasQty)label=(typeof item.qty==='string'?item.qty:item.qty)+' '+item.name;
         const lines=doc.splitTextToSize(label,col2);
-        doc.setTextColor(30);
-        doc.text(lines,x,y);
+        doc.setTextColor(30);doc.text(lines,x,y);
         if(item.obs){
           doc.setFontSize(10);doc.setTextColor(120);
           doc.text(item.obs,x,y+lines.length*5);
           doc.setFontSize(13);
         }
       });
-      const lh=7;
-      y+=lh;
+      y+=7;
       doc.setDrawColor(210);doc.setLineWidth(0.2);
       doc.setLineDashPattern([0.5,1.5],0);
       doc.line(ML,y-1,W-MR,y-1);
@@ -562,9 +560,32 @@ function gerarPDF(cs,btn){
   });
 
   doc.setFontSize(9);doc.setTextColor(170);
-  doc.text('Gerado em '+dtObj.toLocaleDateString('pt-BR'),W/2,290,{align:'center'});
+  doc.text('Gerado em '+new Date().toLocaleDateString('pt-BR'),W/2,290,{align:'center'});
+  return doc;
+}
 
-  // Build email body text
+function doEmail(){
+  const cs=ckSecs();
+  if(!cs.length){toast('Selecione itens primeiro');return;}
+  const btn=document.getElementById('btn-email');
+  btn.disabled=true;btn.textContent='⏳ Gerando...';
+
+  if(!window.jspdf){
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=()=>enviarEmail(cs,btn);
+    s.onerror=()=>{toast('Erro ao carregar jsPDF');btn.disabled=false;btn.textContent='📧 Enviar';};
+    document.head.appendChild(s);
+  } else {
+    enviarEmail(cs,btn);
+  }
+}
+
+function enviarEmail(cs,btn){
+  const dtObj=new Date();
+  const dtFile=dtObj.toLocaleDateString('pt-BR').replace(/\//g,'-');
+  const dtSubj=dtObj.toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'});
+
   let emailBody='Lista Semanal – '+dtObj.toLocaleDateString('pt-BR')+'\n\n';
   cs.forEach(s=>{
     emailBody+=s.emoji+' '+s.title+'\n';
@@ -577,7 +598,7 @@ function gerarPDF(cs,btn){
     emailBody+='\n';
   });
 
-  // Convert to base64 and send to Apps Script
+  const doc=buildDoc(cs);
   const pdfBase64=doc.output('datauristring').split(',')[1];
 
   btn.textContent='📤 Enviando...';
@@ -586,22 +607,14 @@ function gerarPDF(cs,btn){
 
   fetch(SCRIPT_URL,{
     method:'POST',
-    body:JSON.stringify({
-      pdf:pdfBase64,
-      date:dtFile,
-      subject:'Lista Semanal – '+dtSubj,
-      body:emailBody
-    })
+    body:JSON.stringify({pdf:pdfBase64,date:dtFile,subject:'Lista Semanal – '+dtSubj,body:emailBody})
   }).then(r=>r.json()).then(data=>{
-    if(data.ok){
-      toast('PDF salvo e e-mail enviado! ✓',3500);
-    } else {
-      toast('Erro: '+data.error);
-    }
-    btn.disabled=false;btn.textContent='🖨️ PDF';
+    if(data.ok){toast('E-mail enviado com PDF! ✓',3500);}
+    else{toast('Erro: '+data.error);}
+    btn.disabled=false;btn.textContent='📧 Enviar';
   }).catch(err=>{
-    toast('Erro de rede: '+err.message);
-    btn.disabled=false;btn.textContent='🖨️ PDF';
+    toast('Erro: '+err.message);
+    btn.disabled=false;btn.textContent='📧 Enviar';
   });
 }
 
