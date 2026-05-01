@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0054)file:///C:/Users/fclob/Downloads/lista_semanal_20.html -->
+<!-- saved from url=(0056)file:///C:/Users/fclob/Downloads/lista_semanal_21_1.html -->
 <html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -78,6 +78,30 @@ header{background:#3E2723;color:white;padding:18px 16px 14px;position:sticky;top
 .btn-no{background:#EEE;border:none;border-radius:10px;padding:10px 16px;font-size:13px;cursor:pointer;flex-shrink:0}
 .btn-yes{background:#C0392B;color:white;border:none;border-radius:10px;padding:10px 16px;font-size:13px;cursor:pointer;font-weight:500;flex-shrink:0}
 
+/* search */
+.hdr-actions{display:flex;align-items:center;gap:8px}
+.hdr-search-btn{background:rgba(255,255,255,.15);border:none;color:white;border-radius:8px;width:34px;height:34px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+.hdr-search-btn.active{background:rgba(255,255,255,.32)}
+.search-bar{overflow:hidden;max-height:0;transition:max-height .25s,padding .25s;padding:0 16px}
+.search-bar.open{max-height:60px;padding:10px 16px 2px}
+.search-input{width:100%;border:none;border-radius:10px;padding:9px 14px;font-size:14px;background:rgba(255,255,255,.15);color:white;font-family:'DM Sans',sans-serif}
+.search-input::placeholder{color:rgba(255,255,255,.45)}
+.search-input:focus{outline:none;background:rgba(255,255,255,.22)}
+.item-hidden{display:none}
+
+/* item menu */
+.item-menu-btn{background:none;border:none;color:#C8B9A8;font-size:20px;padding:4px 6px;cursor:pointer;flex-shrink:0;line-height:1;border-radius:6px;transition:color .1s}
+.item-menu-btn:active{color:#8B7355}
+.item-menu{margin:0 12px 10px;background:white;border:1px solid #EDE7DE;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.1);overflow:hidden}
+.menu-opt{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:14px;cursor:pointer;color:#2C1810;border:none;background:none;width:100%;text-align:left;transition:background .1s}
+.menu-opt:active{background:#F9F6F1}
+.menu-opt+.menu-opt{border-top:1px solid #F5F0E8}
+.menu-opt.danger{color:#C0392B}
+
+/* edit inline */
+.edit-input-row{display:flex;gap:8px;padding:8px 14px 8px 52px;background:#FDFAF5;border-top:1px solid #F5F0E8}
+.edit-input{flex:1;border-radius:8px;padding:8px 12px;font-size:14px;background:white;color:#2C1810;border:1.5px solid #ccc;font-family:'DM Sans',sans-serif}
+
 #toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#2C1810;color:white;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:200;white-space:nowrap}
 
 /* ── PRINT ── */
@@ -124,10 +148,16 @@ header{background:#3E2723;color:white;padding:18px 16px 14px;position:sticky;top
         <div class="hdr-title">Lista Semanal</div>
         <div class="hdr-sub" id="hdr-date">sexta-feira, 1 de maio</div>
       </div>
-      <div class="hdr-badge" id="hdr-badge" style="display: none;">0 itemns</div>
+      <div class="hdr-actions">
+        <button class="hdr-search-btn" id="btn-search" onclick="toggleSearch()" title="Buscar">🔍</button>
+        <div class="hdr-badge" id="hdr-badge" style="display: none;">0 itemns</div>
+      </div>
+    </div>
+    <div class="search-bar" id="search-bar">
+      <input class="search-input" id="search-input" type="search" placeholder="Buscar item em todas as seções…" oninput="onSearch(this.value)">
     </div>
   </header>
-  <div class="content" id="secs"><div class="sec-card"><div class="sec-hdr" style="background: rgb(255, 248, 246); border-left-color: rgb(192, 57, 43);"><span class="sec-emoji">🍽️</span><span class="sec-title">Refeições a Preparar</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/13</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Arroz do Fernando</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Torta salgada – carne moída, tomate, cebola e salsinha</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Feijão do Fernando</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Gelatinas</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Medalhão de Filé Mignon – Odin e Malu</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Quiabo refogado</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Posta Vermelha – Odin e Malu</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Milho Verde Refogado</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Batata Doce assada</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Carne Moída Kati</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Brócolis e Couve-flor cozida</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Carne Moída Torta</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Mandioca cozida</span></div></div><div class="add-row" style="color: rgb(192, 57, 43);"><span class="add-plus">+</span><span>Adicionar item</span></div></div><div class="sec-card"><div class="sec-hdr" style="background: rgb(246, 251, 246); border-left-color: rgb(46, 125, 50);"><span class="sec-emoji">✅</span><span class="sec-title">Tarefas a Fazer</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/6</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Trocar as águas</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Trocar os Tapetes</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Deixar as luzes acesas</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Deixar o ar no 22</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Deixar o AR NO 23</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Aspirar o Banheiro e a Sala</span></div></div><div class="add-row" style="color: rgb(46, 125, 50);"><span class="add-plus">+</span><span>Adicionar item</span></div></div><div class="sec-card"><div class="sec-hdr" style="background: rgb(245, 248, 255); border-left-color: rgb(21, 101, 192);"><span class="sec-emoji">🛒</span><span class="sec-title">Itens do Mercado</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/8</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Couve-Flor</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Brócolis</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Mandioca</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Batatinha</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Batata Doce</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Azeitona preta</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Azeitona verde sem caroço</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Limão</span></div></div><div class="add-row" style="color: rgb(21, 101, 192);"><span class="add-plus">+</span><span>Adicionar item</span></div></div><div class="sec-card"><div class="sec-hdr" style="background: rgb(247, 251, 244); border-left-color: rgb(85, 139, 47);"><span class="sec-emoji">🥬</span><span class="sec-title">Itens do Sacolão</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/9</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Banana Verde</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Banana Madura</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Abacaxi</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Goiaba verde</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Pera Portuguesa</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Manga verde</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Abacate Maduro</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Abacate Verde</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Morango</span></div></div><div class="add-row" style="color: rgb(85, 139, 47);"><span class="add-plus">+</span><span>Adicionar item</span></div></div><div class="sec-card"><div class="sec-hdr" style="background: rgb(255, 245, 245); border-left-color: rgb(183, 28, 28);"><span class="sec-emoji">🥩</span><span class="sec-title">Itens do Açougue</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/3</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #B71C1C;"></div><span class="item-lbl">Medalhão de Filé Mignon (2 dedos)</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #B71C1C;"></div><span class="item-lbl">Carne Moída de Primeira</span></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #B71C1C;"></div><span class="item-lbl">Posta Vermelha para panela</span></div></div><div class="add-row" style="color: rgb(183, 28, 28);"><span class="add-plus">+</span><span>Adicionar item</span></div></div></div>
+  <div class="content" id="secs"><div class="sec-card"><div class="sec-hdr" style="background: rgb(255, 248, 246); border-left-color: rgb(192, 57, 43);"><span class="sec-emoji">🍽️</span><span class="sec-title">Refeições a Preparar</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/13</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Arroz do Fernando</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Torta salgada – carne moída, tomate, cebola e salsinha</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Feijão do Fernando</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Gelatinas</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Medalhão de Filé Mignon – Odin e Malu</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Quiabo refogado</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Posta Vermelha – Odin e Malu</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Milho Verde Refogado</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Batata Doce assada</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Carne Moída Kati</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Brócolis e Couve-flor cozida</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Carne Moída Torta</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #C0392B;"></div><span class="item-lbl">Mandioca cozida</span><button class="item-menu-btn">⋯</button></div></div><div class="add-row" style="color: rgb(192, 57, 43);"><span class="add-plus">+</span><span>Adicionar item</span></div></div><div class="sec-card"><div class="sec-hdr" style="background: rgb(246, 251, 246); border-left-color: rgb(46, 125, 50);"><span class="sec-emoji">✅</span><span class="sec-title">Tarefas a Fazer</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/6</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Trocar as águas</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Trocar os Tapetes</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Deixar as luzes acesas</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Deixar o ar no 22</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Deixar o AR NO 23</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #2E7D32;"></div><span class="item-lbl">Aspirar o Banheiro e a Sala</span><button class="item-menu-btn">⋯</button></div></div><div class="add-row" style="color: rgb(46, 125, 50);"><span class="add-plus">+</span><span>Adicionar item</span></div></div><div class="sec-card"><div class="sec-hdr" style="background: rgb(245, 248, 255); border-left-color: rgb(21, 101, 192);"><span class="sec-emoji">🛒</span><span class="sec-title">Itens do Mercado</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/8</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Couve-Flor</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Brócolis</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Mandioca</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Batatinha</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Batata Doce</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Azeitona preta</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Azeitona verde sem caroço</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #1565C0;"></div><span class="item-lbl">Limão</span><button class="item-menu-btn">⋯</button></div></div><div class="add-row" style="color: rgb(21, 101, 192);"><span class="add-plus">+</span><span>Adicionar item</span></div></div><div class="sec-card"><div class="sec-hdr" style="background: rgb(247, 251, 244); border-left-color: rgb(85, 139, 47);"><span class="sec-emoji">🥬</span><span class="sec-title">Itens do Sacolão</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/9</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Banana Verde</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Banana Madura</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Abacaxi</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Goiaba verde</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Pera Portuguesa</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Manga verde</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Abacate Maduro</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Abacate Verde</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #558B2F;"></div><span class="item-lbl">Morango</span><button class="item-menu-btn">⋯</button></div></div><div class="add-row" style="color: rgb(85, 139, 47);"><span class="add-plus">+</span><span>Adicionar item</span></div></div><div class="sec-card"><div class="sec-hdr" style="background: rgb(255, 245, 245); border-left-color: rgb(183, 28, 28);"><span class="sec-emoji">🥩</span><span class="sec-title">Itens do Açougue</span><span class="sec-badge" style="background: rgb(232, 224, 216); color: rgb(153, 153, 153);">0/3</span></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #B71C1C;"></div><span class="item-lbl">Medalhão de Filé Mignon (2 dedos)</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #B71C1C;"></div><span class="item-lbl">Carne Moída de Primeira</span><button class="item-menu-btn">⋯</button></div></div><div class="item-wrap"><div class="item-row"><div class="cb" style="--ac: #B71C1C;"></div><span class="item-lbl">Posta Vermelha para panela</span><button class="item-menu-btn">⋯</button></div></div><div class="add-row" style="color: rgb(183, 28, 28);"><span class="add-plus">+</span><span>Adicionar item</span></div></div></div>
 </div>
 
 <div id="bbar">
@@ -182,14 +212,14 @@ const DEFAULTS=[
     {name:'Abacate Maduro',qty:1},{name:'Abacate Verde',qty:1},
     {name:'Morango',qty:1}
   ]},
-  {id:'acougue',emoji:'🥩',title:'Itens do Açougue',ac:'#B71C1C',bg:'#FFF5F5',hasQty:true,qtyType:'text',items:[
-    {name:'Medalhão de Filé Mignon (2 dedos)',qty:'10',obs:'15 medalhão de 2 dedos de espessura. Separar uma bandeija com 10 e uma com 5'},
-    {name:'Carne Moída de Primeira',qty:'',obs:'400 gramas'},
-    {name:'Posta Vermelha para panela',qty:'',obs:'700 gramas corta pra panela e sem gordura'}
+  {id:'acougue',emoji:'🥩',title:'Itens do Açougue',ac:'#B71C1C',bg:'#FFF5F5',hasQty:false,items:[
+    {name:'Medalhão de Filé Mignon (2 dedos)',obs:'15 medalhão de 2 dedos de espessura. Separar uma bandeija com 10 e uma com 5'},
+    {name:'Carne Moída de Primeira',obs:'400 gramas'},
+    {name:'Posta Vermelha para panela',obs:'700 gramas corta pra panela e sem gordura'}
   ]}
 ];
 
-let secs=[],ck={},adding=null;
+let secs=[],ck={},adding=null,searchQ='',menuOpen=null,editing=null;
 
 function load(){
   try{
@@ -241,14 +271,53 @@ function renderHdr(){
   document.getElementById('btn-email').disabled=n===0;
 }
 
+function toggleSearch(){
+  const bar=document.getElementById('search-bar');
+  const btn=document.getElementById('btn-search');
+  const inp=document.getElementById('search-input');
+  const open=bar.classList.toggle('open');
+  btn.classList.toggle('active',open);
+  if(open){setTimeout(()=>inp.focus(),260);}
+  else{inp.value='';onSearch('');}
+}
+function onSearch(v){
+  searchQ=v.toLowerCase().trim();
+  menuOpen=null;editing=null;
+  renderSecs();
+}
+function deleteItem(sid,i){
+  if(!confirm('Excluir este item permanentemente?'))return;
+  const sec=secs.find(s=>s.id===sid);
+  sec.items.splice(i,1);
+  const newCk={};
+  Object.entries(ck).forEach(([k,v])=>{
+    if(!k.startsWith(sid+'_')){newCk[k]=v;return;}
+    const idx=parseInt(k.split('_')[1]);
+    if(idx===i)return;
+    const ni=idx>i?idx-1:idx;
+    newCk[sid+'_'+ni]=v;
+  });
+  ck=newCk;menuOpen=null;editing=null;
+  save();render();
+}
+function startEdit(sid,i){menuOpen=null;editing={sid,i};renderSecs();}
+function confirmEdit(sid,i,val){
+  const v=val.trim();
+  if(v){secs.find(s=>s.id===sid).items[i].name=v;save();}
+  editing=null;render();
+}
+
 function renderSecs(){
   const container=document.getElementById('secs');
   container.innerHTML='';
   secs.forEach(sec=>{
+    const visibleIdx=sec.items.map((item,i)=>({item,i}))
+      .filter(({item})=>!searchQ||item.name.toLowerCase().includes(searchQ));
+    if(searchQ&&visibleIdx.length===0)return;
+
     const nOn=sec.items.filter((_,i)=>{const s=ck[K(sec.id,i)];return s&&s.on;}).length;
     const card=mk('div','sec-card');
 
-    // header
     const hdr=mk('div','sec-hdr');
     hdr.style.cssText='background:'+sec.bg+';border-left-color:'+sec.ac;
     hdr.appendChild(mk('span','sec-emoji',sec.emoji));
@@ -259,16 +328,33 @@ function renderSecs(){
     hdr.appendChild(badge);
     card.appendChild(hdr);
 
-    // items
-    sec.items.forEach((item,i)=>{
+    visibleIdx.forEach(({item,i})=>{
       const key=K(sec.id,i);
       const st=getSt(key,item.qty||0,item.obs||'');
       const isOn=st.on;
+      const isMenuOpen=menuOpen&&menuOpen.sid===sec.id&&menuOpen.i===i;
+      const isEditing=editing&&editing.sid===sec.id&&editing.i===i;
       const wrap=mk('div','item-wrap');
 
-      // clickable row
+      if(isEditing){
+        const er=mk('div','edit-input-row');
+        er.onclick=e=>e.stopPropagation();
+        const ei=mk('input','edit-input');
+        ei.type='text';ei.value=item.name;ei.style.borderColor=sec.ac;
+        const ok=mk('button','btn-ok','\u2713');ok.style.background=sec.ac;
+        const x=mk('button','btn-x','\u2715');
+        ok.onclick=()=>confirmEdit(sec.id,i,ei.value);
+        x.onclick=()=>{editing=null;renderSecs();};
+        ei.onkeydown=e=>{if(e.key==='Enter')confirmEdit(sec.id,i,ei.value);if(e.key==='Escape'){editing=null;renderSecs();}};
+        er.appendChild(ei);er.appendChild(ok);er.appendChild(x);
+        wrap.appendChild(er);
+        card.appendChild(wrap);
+        setTimeout(()=>{ei.focus();ei.select();},30);
+        return;
+      }
+
       const row=mk('div','item-row');
-      row.onclick=()=>toggle(sec.id,i);
+      row.onclick=()=>{if(menuOpen){menuOpen=null;renderSecs();return;}toggle(sec.id,i);};
 
       const cb=mk('div','cb'+(isOn?' on':''));
       cb.style.setProperty('--ac',sec.ac);
@@ -276,99 +362,84 @@ function renderSecs(){
       row.appendChild(cb);
       row.appendChild(mk('span','item-lbl'+(isOn?' on':''),item.name));
 
-      // quantity control
       if(sec.hasQty&&isOn){
-        if(sec.qtyType==='text'){
-          // text input for weight/freeform qty (açougue)
-          const qrow=mk('div','obs-row');
-          qrow.onclick=e=>e.stopPropagation();
-          const qlbl=mk('span','obs-icon','⚖️');
-          const qinp=mk('input','obs-input');
-          qinp.type='text';
-          qinp.placeholder='Quantidade (ex: 500g, 1kg)...';
-          qinp.value=st.qty||'';
-          qinp.style.setProperty('--ac',sec.ac);
-          qinp.oninput=function(){
-            const cur=ck[key]||{on:true,qty:'',obs:''};
-            ck[key]={...cur,qty:this.value};
-            save();
-          };
-          qrow.appendChild(qlbl);qrow.appendChild(qinp);
-          wrap.appendChild(qrow);
-        } else {
-          // numeric stepper
-          const stp=mk('div','stepper');
-          stp.style.setProperty('--ac',sec.ac);
-          stp.onclick=e=>e.stopPropagation();
-          const minus=mk('button','step-btn','−');
-          minus.style.setProperty('--ac',sec.ac);
-          minus.onclick=e=>{e.stopPropagation();decQty(sec.id,i);};
-          const blank=st.qty===0;
-          const numEl=mk('span','step-num'+(blank?' blank':''),blank?'—':String(st.qty));
-          const plus=mk('button','step-btn','+');
-          plus.style.setProperty('--ac',sec.ac);
-          plus.onclick=e=>{e.stopPropagation();incQty(sec.id,i);};
-          stp.appendChild(minus);stp.appendChild(numEl);stp.appendChild(plus);
-          row.appendChild(stp);
-        }
+        const stp=mk('div','stepper');
+        stp.style.setProperty('--ac',sec.ac);
+        stp.onclick=e=>e.stopPropagation();
+        const minus=mk('button','step-btn','\u2212');minus.style.setProperty('--ac',sec.ac);
+        minus.onclick=e=>{e.stopPropagation();decQty(sec.id,i);};
+        const blank=st.qty===0;
+        const numEl=mk('span','step-num'+(blank?' blank':''),blank?'\u2014':String(st.qty));
+        const plus=mk('button','step-btn','+');plus.style.setProperty('--ac',sec.ac);
+        plus.onclick=e=>{e.stopPropagation();incQty(sec.id,i);};
+        stp.appendChild(minus);stp.appendChild(numEl);stp.appendChild(plus);
+        row.appendChild(stp);
       }
 
+      const mBtn=mk('button','item-menu-btn','\u22ef');
+      mBtn.onclick=e=>{e.stopPropagation();menuOpen=isMenuOpen?null:{sid:sec.id,i};renderSecs();};
+      row.appendChild(mBtn);
       wrap.appendChild(row);
 
-      // observation (only when on)
       if(isOn){
         const obsRow=mk('div','obs-row');
         obsRow.onclick=e=>e.stopPropagation();
         const inp=mk('input','obs-input');
-        inp.type='text';
-        inp.placeholder='Observação opcional...';
-        inp.value=st.obs||'';
-        inp.style.setProperty('--ac',sec.ac);
+        inp.type='text';inp.placeholder='Observa\u00e7\u00e3o opcional...';
+        inp.value=st.obs||'';inp.style.setProperty('--ac',sec.ac);
         inp.oninput=function(){
           const cur=ck[key]||{on:true,qty:0,obs:''};
-          ck[key]={...cur,obs:this.value};
-          save();
+          ck[key]={...cur,obs:this.value};save();
         };
-        obsRow.appendChild(mk('span','obs-icon','📝'));
+        obsRow.appendChild(mk('span','obs-icon','\ud83d\udcdd'));
         obsRow.appendChild(inp);
         wrap.appendChild(obsRow);
+      }
+
+      if(isMenuOpen){
+        const menu=mk('div','item-menu');
+        const edit=mk('button','menu-opt','\u270f\ufe0f  Renomear');
+        edit.onclick=e=>{e.stopPropagation();startEdit(sec.id,i);};
+        const del=mk('button','menu-opt danger','\ud83d\uddd1\ufe0f  Excluir item');
+        del.onclick=e=>{e.stopPropagation();deleteItem(sec.id,i);};
+        menu.appendChild(edit);menu.appendChild(del);
+        wrap.appendChild(menu);
       }
 
       card.appendChild(wrap);
     });
 
-    // add item
-    if(adding===sec.id){
-      const ir=mk('div','add-input-row');
-      const inp=mk('input','add-input');
-      inp.type='text';inp.placeholder='Nome do item...';inp.style.borderColor=sec.ac;
-      const ok=mk('button','btn-ok','✓');
-      ok.style.background=sec.ac;
-      const x=mk('button','btn-x','✕');
-      const doAdd=()=>{
-        const v=inp.value.trim();
-        if(v){sec.items.push({name:v,qty:sec.hasQty?0:undefined});save();}
-        adding=null;render();
-      };
-      ok.onclick=doAdd;
-      x.onclick=()=>{adding=null;renderSecs();};
-      inp.onkeydown=e=>{if(e.key==='Enter')doAdd();if(e.key==='Escape')x.onclick();};
-      ir.appendChild(inp);ir.appendChild(ok);ir.appendChild(x);
-      card.appendChild(ir);
-      setTimeout(()=>inp.focus(),30);
-    } else {
-      const ar=mk('div','add-row');
-      ar.style.color=sec.ac;
-      ar.appendChild(mk('span','add-plus','+'));
-      ar.appendChild(mk('span','','Adicionar item'));
-      ar.onclick=()=>{adding=sec.id;renderSecs();};
-      card.appendChild(ar);
+    if(!searchQ){
+      if(adding===sec.id){
+        const ir=mk('div','add-input-row');
+        const inp=mk('input','add-input');
+        inp.type='text';inp.placeholder='Nome do item...';inp.style.borderColor=sec.ac;
+        const ok=mk('button','btn-ok','\u2713');ok.style.background=sec.ac;
+        const x=mk('button','btn-x','\u2715');
+        const doAdd=()=>{
+          const v=inp.value.trim();
+          if(v){sec.items.push({name:v,qty:sec.hasQty?0:undefined});save();}
+          adding=null;render();
+        };
+        ok.onclick=doAdd;
+        x.onclick=()=>{adding=null;renderSecs();};
+        inp.onkeydown=e=>{if(e.key==='Enter')doAdd();if(e.key==='Escape')x.onclick();};
+        ir.appendChild(inp);ir.appendChild(ok);ir.appendChild(x);
+        card.appendChild(ir);
+        setTimeout(()=>inp.focus(),30);
+      } else {
+        const ar=mk('div','add-row');
+        ar.style.color=sec.ac;
+        ar.appendChild(mk('span','add-plus','+'));
+        ar.appendChild(mk('span','','Adicionar item'));
+        ar.onclick=()=>{adding=sec.id;renderSecs();};
+        card.appendChild(ar);
+      }
     }
 
     container.appendChild(card);
   });
 }
-
 function toggle(sid,i){
   const key=K(sid,i);
   const sec=secs.find(s=>s.id===sid);
