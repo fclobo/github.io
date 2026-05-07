@@ -177,16 +177,18 @@ header{background:#3E2723;color:white;padding:18px 16px 14px;position:sticky;top
 <div id="toast"></div>
 
 <script>
-const SKEY='lista_lobo_v7';
+const SKEY='lista_lobo_v8';
 
 const DEFAULTS=[
   {id:'refeicoes',emoji:'🍽️',title:'Refeições a Preparar',ac:'#C0392B',bg:'#FFF8F6',hasQty:false,items:[
     {name:'Arroz do Fernando'},
-    {name:'Torta salgada – carne moída, tomate, cebola e salsinha',obs:'Colocar uma cenoura ralada'},
+    {name:'Arroz Branco da Kati',obs:'Só um pouco'},
+    {name:'Arroz Doce'},
     {name:'Feijão do Fernando'},
     {name:'Gelatinas'},
     {name:'Gelatina Fernando'},
     {name:'Medalhão de Filé Mignon – Odin e Malu'},
+    {name:'Picadinho de Filé Mignon Kati',obs:'Com cebola, cebolinha, salsinha e shoyo'},
     {name:'Quiabo refogado'},
     {name:'Posta Vermelha – Odin e Malu'},
     {name:'Milho Verde Refogado',obs:'Sem cebolinha e salsinha'},
@@ -196,11 +198,12 @@ const DEFAULTS=[
     {name:'Brócolis e Couve-flor cozida'},
     {name:'Conserva de ovos de codorna'},
     {name:'Carne Moída Torta',obs:'Separar um pouco de carne moída pra torta'},
+    {name:'Torta salgada – carne moída, tomate, cebola e salsinha',obs:'Colocar uma cenoura ralada'},
     {name:'Mandioca cozida'},
-    {name:'Arroz Branco da Kati',obs:'Só um pouco'},
     {name:'Cortar a Manga da geladeira'},
     {name:'Passar as calças'},
-    {name:'Dar comidinha Malu e Odin'}
+    {name:'Comidinha Malu',obs:'Mix de legumes + ração + pedacinho de carne'},
+    {name:'Comidinha Odin',obs:'Patê + pedacinho de carne + pedacinho de batata doce e ração'}
   ]},
   {id:'tarefas',emoji:'✅',title:'Tarefas a Fazer',ac:'#2E7D32',bg:'#F6FBF6',hasQty:false,items:[
     {name:'Trocar as águas'},{name:'Trocar os Tapetes'},
@@ -208,20 +211,27 @@ const DEFAULTS=[
     {name:'Aspirar o Banheiro e a Sala'}
   ]},
   {id:'mercado',emoji:'🛒',title:'Itens do Mercado',ac:'#1565C0',bg:'#F5F8FF',hasQty:true,items:[
+    {name:'Arroz do Fernando',qty:0},{name:'Arroz Branco',qty:0},{name:'Feijão',qty:0},
     {name:'Couve-Flor',qty:3},{name:'Brócolis',qty:3},
-    {name:'Cenoura',qty:2},{name:'Mandioca',qty:1},
-    {name:'Batatinha',qty:0},{name:'Batata Doce',qty:1},
-    {name:'Tomate',qty:2},{name:'Tomatinho Cereja',qty:1},
-    {name:'Azeitona preta',qty:1},{name:'Azeitona verde sem caroço',qty:1},
-    {name:'Azeitona Verde',qty:1},{name:'Limão',qty:0},
-    {name:'Salsinha',qty:1},{name:'Cebolinha',qty:1},{name:'Alho',qty:1},
-    {name:'Ovos de Codorna',qty:1},
+    {name:'Cenoura',qty:2},{name:'Cenoura Baby',qty:3},{name:'Cenoura pra salada',qty:0},
+    {name:'Mandioca',qty:1},{name:'Batatinha',qty:0},{name:'Batata Doce',qty:1},
+    {name:'Cebola Branca',qty:0},{name:'Cebola Roxa',qty:0},
+    {name:'Tomate',qty:2},{name:'Tomatinho Cereja',qty:1},{name:'Salada pro almoço',qty:0},
+    {name:'Azeitona preta',qty:1},{name:'Azeitona verde sem caroço',qty:1},{name:'Azeitona Verde',qty:1},
+    {name:'Limão',qty:0},{name:'Salsinha',qty:1},{name:'Cebolinha',qty:1},{name:'Alho',qty:1},
+    {name:'Ovos',qty:0},{name:'Ovos de Codorna',qty:1},
     {name:'Iogurte Activa zero Morango',qty:2},{name:'Iogurte Natural Nestlé',qty:2},
-    {name:'Gelatina',qty:2,obs:'Framboesa'},
-    {name:'Bolacha Crean Cracker',qty:1},{name:'Bolacha de Maizena',qty:1},
+    {name:'Danoninho',qty:0},{name:'Gelatina',qty:2,obs:'Framboesa'},
+    {name:'Maionese Helmans',qty:0},{name:'Papel Toalha',qty:0},
+    {name:'Farinha de Arroz',qty:0},{name:'Fermento',qty:0},
+    {name:'Leite de Coco',qty:0},{name:'Creme de Leite Zero Lactose',qty:0},
+    {name:'Leite Condensado Zero Lactose',qty:0},{name:'Coco Ralado',qty:0},
+    {name:'Bolacha Cream Cracker',qty:1},{name:'Bolacha de Maizena',qty:1},
     {name:'Bolacha Passa Tempo de leite',qty:6},{name:'Bolacha de chocolate',qty:1},
+    {name:'Wafer Chocolate',qty:0},{name:'Wafer Morango',qty:0},{name:'Wafer Avelã',qty:0},
     {name:'Bala Arcor',qty:5,obs:'Menta 3, Pistache 3, Caramelo Salgado 1, Leite 3'},
-    {name:'Sticker Palitinho Salgado',qty:1},{name:'Pingo Douro Salgadinho',qty:1},
+    {name:'Stiksy Palitinho Salgado',qty:1},{name:'Pingo Douro Salgadinho',qty:1},
+    {name:'Brinquedos Odin',qty:0},
     {name:'Filtro de Papel 103',qty:1},
     {name:'Sal',qty:1},{name:'Sal grosso',qty:1},
     {name:'Vela',qty:4},{name:'Fósforo',qty:2},
@@ -232,10 +242,12 @@ const DEFAULTS=[
     {name:'Abacaxi',qty:1,obs:'Fatiado'},{name:'Goiaba verde',qty:3},
     {name:'Pera Portuguesa',qty:3},{name:'Manga verde',qty:1},
     {name:'Abacate Maduro',qty:1},{name:'Abacate Verde',qty:1},
-    {name:'Morango',qty:1}
+    {name:'Morango',qty:1},{name:'Uva Verde',qty:1},
+    {name:'Caqui',qty:4},{name:'Ponkã',qty:8},{name:'Ameixa',qty:3}
   ]},
   {id:'acougue',emoji:'🥩',title:'Itens do Açougue',ac:'#B71C1C',bg:'#FFF5F5',hasQty:false,items:[
     {name:'Medalhão de Filé Mignon (2 dedos)',obs:'15 medalhão de 2 dedos de espessura. Separar uma bandeija com 10 e uma com 5'},
+    {name:'Filé Mignon pra estrogonofe',obs:'350 gramas'},
     {name:'Carne Moída de Primeira',obs:'400 gramas'},
     {name:'Posta Vermelha para panela',obs:'700 gramas corta pra panela e sem gordura'}
   ]}
