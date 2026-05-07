@@ -281,7 +281,12 @@ function mk(tag,cls,txt){
   return e;
 }
 
-function render(){renderHdr();renderSecs();}
+function render(){
+  const scrollY=window.scrollY;
+  renderHdr();
+  renderSecs();
+  window.scrollTo(0,scrollY);
+}
 
 function renderHdr(){
   document.getElementById('hdr-date').textContent=
