@@ -177,7 +177,7 @@ header{background:#3E2723;color:white;padding:18px 16px 14px;position:sticky;top
 <div id="toast"></div>
 
 <script>
-const SKEY='lista_lobo_v8';
+const SKEY='lista_lobo_v9';
 
 const DEFAULTS=[
   {id:'refeicoes',emoji:'🍽️',title:'Refeições a Preparar',ac:'#C0392B',bg:'#FFF8F6',hasQty:false,items:[
@@ -192,6 +192,7 @@ const DEFAULTS=[
     {name:'Quiabo refogado'},
     {name:'Posta Vermelha – Odin e Malu'},
     {name:'Milho Verde Refogado',obs:'Sem cebolinha e salsinha'},
+    {name:'Milho verde cozido'},
     {name:'Batata Doce assada'},
     {name:'Maionese de batata',obs:'Com salsinha, cebolinha e cheiro verde'},
     {name:'Carne Moída Kati',obs:'Fazer a carne bem sequinha'},
@@ -200,6 +201,11 @@ const DEFAULTS=[
     {name:'Carne Moída Torta',obs:'Separar um pouco de carne moída pra torta'},
     {name:'Torta salgada – carne moída, tomate, cebola e salsinha',obs:'Colocar uma cenoura ralada'},
     {name:'Mandioca cozida'},
+    {name:'Mandioca frita'},
+    {name:'Polenta Kati'},
+    {name:'Strogonofe de Frango Kati'},
+    {name:'Canjica Branca'},
+    {name:'Pinhão cozido'},
     {name:'Cortar a Manga da geladeira'},
     {name:'Passar as calças'},
     {name:'Comidinha Malu',obs:'Mix de legumes + ração + pedacinho de carne'},
@@ -222,16 +228,22 @@ const DEFAULTS=[
     {name:'Ovos',qty:0},{name:'Ovos de Codorna',qty:1},
     {name:'Iogurte Activa zero Morango',qty:2},{name:'Iogurte Natural Nestlé',qty:2},
     {name:'Danoninho',qty:0},{name:'Gelatina',qty:2,obs:'Framboesa'},
-    {name:'Maionese Helmans',qty:0},{name:'Papel Toalha',qty:0},
-    {name:'Farinha de Arroz',qty:0},{name:'Fermento',qty:0},
+    {name:'Queijo Ralado Parmesão',qty:0},{name:'Queijo Parmesão Pedaço',qty:0},
+    {name:'Maionese Helmans',qty:0},
+    {name:'Azeite de Oliva',qty:0},{name:'Óleo',qty:0},{name:'Vinagre de Maçã',qty:0},
+    {name:'Café Pilão Tradicional',qty:0},
+    {name:'Farinha de Arroz',qty:0},{name:'Fubá Mimoso',qty:0},
     {name:'Leite de Coco',qty:0},{name:'Creme de Leite Zero Lactose',qty:0},
     {name:'Leite Condensado Zero Lactose',qty:0},{name:'Coco Ralado',qty:0},
+    {name:'Milho/Ervilha Duo',qty:0},{name:'Champinhon Bolinha',qty:0},
+    {name:'Canjica Branca',qty:0},{name:'Fermento',qty:0},
     {name:'Bolacha Cream Cracker',qty:1},{name:'Bolacha de Maizena',qty:1},
     {name:'Bolacha Passa Tempo de leite',qty:6},{name:'Bolacha de chocolate',qty:1},
     {name:'Wafer Chocolate',qty:0},{name:'Wafer Morango',qty:0},{name:'Wafer Avelã',qty:0},
     {name:'Bala Arcor',qty:5,obs:'Menta 3, Pistache 3, Caramelo Salgado 1, Leite 3'},
     {name:'Stiksy Palitinho Salgado',qty:1},{name:'Pingo Douro Salgadinho',qty:1},
-    {name:'Brinquedos Odin',qty:0},
+    {name:'Batatinha Palha',qty:0},{name:'Brinquedos Odin',qty:0},
+    {name:'Papel Toalha',qty:0},{name:'Papel Alumínio',qty:0},{name:'Palito de dente',qty:0},
     {name:'Filtro de Papel 103',qty:1},
     {name:'Sal',qty:1},{name:'Sal grosso',qty:1},
     {name:'Vela',qty:4},{name:'Fósforo',qty:2},
@@ -248,6 +260,7 @@ const DEFAULTS=[
   {id:'acougue',emoji:'🥩',title:'Itens do Açougue',ac:'#B71C1C',bg:'#FFF5F5',hasQty:false,items:[
     {name:'Medalhão de Filé Mignon (2 dedos)',obs:'15 medalhão de 2 dedos de espessura. Separar uma bandeija com 10 e uma com 5'},
     {name:'Filé Mignon pra estrogonofe',obs:'350 gramas'},
+    {name:'Filé de Frango pra Strogonoff'},
     {name:'Carne Moída de Primeira',obs:'400 gramas'},
     {name:'Posta Vermelha para panela',obs:'700 gramas corta pra panela e sem gordura'}
   ]}
